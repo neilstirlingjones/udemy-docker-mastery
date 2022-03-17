@@ -3,22 +3,25 @@ version: '2'
 
 services:
   drupal:
-    image: drupal:latest # this will use the latest version of drupal
+    image: custom-drupal # this will create a local customer version of drupal for local use
+    build: .
     ports:
       - '8080:80' # expose 80 on host and sent to 80 in container
     volumes:
-      - /var/www/html/modules
-      - /var/www/html/profiles
-      - /var/www/html/themes
+      - drupal-modules:/var/www/html/modules
+      - drupal-profiles:/var/www/html/profiles
+      - drupal-themes:/var/www/html/themes
       # this takes advantage of the feature in Docker that a new anonymous
       # volume (which is what we're creating here) will be initialized with the
       # existing content of the image at the same location
-      - /var/www/html/sites
+      - drupal-sites:/var/www/html/sites
     restart: always
   drupal_db:
     image: postgres:latest  # this will use latest version of postgres
     environment:
       - POSTGRES_PASSWORD=password
     restart: always 
+    volumes: 
+      - drupal-data:/var/lib/postgresql/data
 
     
