@@ -34,7 +34,7 @@ docker service create --name redis --network frontend --replicas 1 redis:3.2
     - no public ports
     - on frontend and backend networks
     - 1 replica
-docker service create --name worker --network frontend backend --replicas 1 bretfisher/examplevotingapp_worker
+docker service create --name worker --network frontend --network backend --replicas 1 bretfisher/examplevotingapp_worker
 
 - db
     - postgres:9.4
@@ -42,7 +42,7 @@ docker service create --name worker --network frontend backend --replicas 1 bret
     - on backend network
     - 1 replica
     - remember set env for password-less connections -e POSTGRES_HOST_AUTH_METHOD=trust
-docker service create --name db --network backend --replicas 1 -e POSTGRES_HOST_AUTH_METHOD=trust postgres:9.4
+docker service create --name db --network backend --replicas 1 -e POSTGRES_HOST_AUTH_METHOD=trust --mount type=volume,source=db-data,target=/var/lib/postgresql/data postgres:9.4
 
 - result
     - bretfisher/examplevotingapp_result
